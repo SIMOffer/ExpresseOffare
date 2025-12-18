@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim Express Offer Hub - সরকারি অনুমোদিত</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%); overflow-x: hidden; }
+
+        /* লোডার */
+        #loader {
+            position: fixed; width: 100%; height: 100vh;
+            background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .sim-container { position: relative; width: 120px; height: 160px; }
+        .sim-card {
+            position: absolute; width: 80px; height: 110px;
+            background: #fff; border-radius: 10px; border-top-right-radius: 35px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;
+        }
+        .sim-chip { width: 35px; height: 28px; background: #FFD700; border-radius: 5px; border: 2px solid #b8860b; }
+        .card1 { animation: pushOut 2s infinite ease-in-out; background: #f8f9fa; }
+        .card2 { animation: pushIn 2s infinite ease-in-out; background: #ffffff; left: -150px; }
+        @keyframes pushIn {
+            0% { left: -150px; opacity: 0; transform: rotate(-10deg); }
+            50% { left: 20px; opacity: 1; transform: rotate(0deg); }
+            100% { left: 20px; opacity: 1; transform: rotate(0deg); }
+        }
+        @keyframes pushOut {
+            0% { left: 20px; transform: rotate(0deg); }
+            40% { left: 20px; transform: rotate(0deg); }
+            60% { left: 180px; opacity: 0; transform: rotate(10deg); }
+            100% { left: 180px; opacity: 0; transform: rotate(10deg); }
+        }
+        #loader p { color: white; margin-top: 30px; font-weight: bold; font-size: 18px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
+
+        /* অপারেটর কালার */
+        .operator-skitto { --primary-color: #8e24aa; --secondary-color: #ff4081; }
+        .operator-robi { --primary-color: #00bcd4; --secondary-color: #ff5252; }
+        .operator-banglalink { --primary-color: #ff6d00; --secondary-color: #dd2c00; }
+        .operator-gp { --primary-color: #00c853; --secondary-color: #009624; }
+
+        /* অপারেটর হেডার */
+        .operator-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 0 0 35px 35px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .operator-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        /* অপারেটর কার্ড */
+        .operator-card {
+            background: linear-gradient(145deg, #ffffff, #f8fbff);
+            border-radius: 22px;
+            padding: 25px 15px;
+            text-align: center;
+            border: 2px solid rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .operator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        .operator-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.15);
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        /* অফার কার্ড */
+        .offer-card-compact {
+            background: linear-gradient(135deg, #ffffff 0%, #fafcff 100%);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.09);
+            border: 1px solid rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .offer-card-compact:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .offer-card-compact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        /* ক্যাটাগরি বাটন */
+        .category-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 14px;
+            padding: 10px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .category-btn:hover {
+            border-color: rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+        }
+
+        /* ফ্লোটিং বাটন */
+        .float-contact { position: fixed; bottom: 30px; right: 30px; z-index: 100; }
+        .btn-wa { 
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); 
+            width: 70px; height: 70px; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            color: white; font-size: 36px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5); 
+            text-decoration: none; transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        .btn-wa:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* সার্ভিস কার্ড */
+        .service-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border: 2px solid rgba(0,0,0,0.05);
+            border-radius: 18px;
+            padding: 22px 12px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 4px solid transparent;
+        }
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        /* রিটেলার বাটন */
+        .retailer-card {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+            border: 2px solid rgba(255, 152, 0, 0.3);
+            border-radius: 18px;
+            padding: 22px 12px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 4px solid #FF9800;
+        }
+        .retailer-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(255, 152, 0, 0.2);
+            background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
+        }
+
+        /* নোটিফিকেশন */
+        #notification-popup {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 450px; background: white;
+            border-radius: 25px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            z-index: 10000; display: none; overflow: hidden;
+            animation: popupShow 0.5s ease-out;
+        }
+        @keyframes popupShow {
+            0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* বাই নাও বাটন */
+        .buy-now-btn {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .buy-now-btn:hover {
+            background: linear-gradient(135deg, #F57C00 0%, #EF6C00 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 124, 0, 0.4);
+        }
+
+        @media (max-width: 640px) {
+            .offer-card-compact { padding: 15px; }
+            .btn-wa { width: 60px; height: 60px; font-size: 28px; bottom: 20px; right: 20px; }
+            .operator-card { padding: 20px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="sim-container">
+            <div class="sim-card card1"><div class="sim-chip"></div></div>
+            <div class="sim-card card2"><div class="sim-chip"></div></div>
+        </div>
+        <p>সিম অফার চেক হচ্ছে...</p>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: none;"></div>
+    <div id="notification-popup">
+        <div class="popup-header" style="background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: white; padding: 25px; text-align: center; position: relative;">
+            <h3 style="font-size: 24px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                <i class="fas fa-bell"></i> 🚀 গুরুত্বপূর্ণ নোটিস 🚀
+            </h3>
+            <div class="close-btn" onclick="closeNotification()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; transition: all 0.3s ease;">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="popup-content" style="padding: 30px 25px; max-height: 450px; overflow-y: auto; line-height: 1.7; color: #444; background: #f8fafc;">
+            <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">👋</span> <strong style="font-size: 18px;">স্বাগতম!</strong> আমাদের প্রিমিয়াম সিম অফার হাব এ আপনাকে আন্তরিক স্বাগতম! 🌟</p>
+            
+            <div class="highlight" style="background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); padding: 18px 20px; border-radius: 12px; border-left: 5px solid #f39c12; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">✅</span> <strong style="color: #d35400;">সরকারি অনুমোদিত সার্ভিস:</strong> আমাদের সার্ভিস সম্পূর্ণ সরকার অনুমোদিত এবং আইনসম্মত।</p>
+            </div>
+            
+            <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">💰</span> <strong>অ্যাডভান্স পেমেন্ট ভয়?</strong> চিন্তার কোন কারণ নেই! আমাদের কাছে থেকে <strong>যেকোনো অফার অ্যাডভান্স পেমেন্ট ছাড়াই</strong> নিতে পারবেন। শুধু কিছু শর্তাবলী মেনে চলতে হবে।</p>
+            
+            <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">🎯</span> <strong>কাস্টমাইজড অফার:</strong> আপনার প্রয়োজনের উপর ভিত্তি করে যেকোনো অফার কাস্টমাইজ করে নিতে পারবেন! স্বল্প মূল্যে সেরা সার্ভিস পাবেন।</p>
+            
+            <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">📋</span> <strong>শর্তাবলী:</strong></p>
+            <ul style="margin-left: 25px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 10px;">
+                <li style="margin-bottom: 8px;">✅ অ্যাডভান্স পেমেন্ট না করলে NID কার্ড/পাসপোর্ট/স্টুডেন্ট কার্ড/জন্ম নিবন্ধনের যেকোনো একটি ডকুমেন্ট প্রয়োজন</li>
+                <li style="margin-bottom: 8px;">✅ একটি সেলফি ছবি প্রয়োজন হবে</li>
+                <li style="margin-bottom: 8px;">✅ অফার নেওয়ার পর নির্দিষ্ট সময়ের মধ্যে পেমেন্ট করতে হবে</li>
+                <li style="margin-bottom: 8px;">✅ আমাদের সাথে প্রতারণা করলে আইনি ব্যবস্থা নেওয়া হবে</li>
+            </ul>
+            
+            <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">⚖️</span> <strong>আইনি নোটিশ:</strong> আমরা ৪০০-৫০০ টাকার জন্যও আইনি পদক্ষেপ নিতে বাধ্য হব যদি কেউ আমাদের সাথে প্রতারণা করে। সততার সাথে কাজ করলে কোন সমস্যা নেই।</p>
+            
+            <p><span class="emoji" style="font-size: 22px; margin-right: 8px;">🤝</span> <strong>বিশেষ সুযোগ:</strong> আপনি যদি রিটেলার হন, আমাদের সাথে যোগাযোগ করে বিশেষ ডিসকাউন্ট এবং ক্রেডিট সুবিধা নিতে পারবেন!</p>
+        </div>
+    </div>
+
+    <div class="container max-w-500px mx-auto bg-white min-h-screen" id="main-content" style="display: none; box-shadow: 0 0 40px rgba(0,0,0,0.05);">
+        <div id="home-page">
+            <div class="app-header" style="background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 30px 30px; margin-bottom: 15px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');"></div>
+                <h1 style="font-size: 26px; margin-bottom: 8px; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">📱 Premium Sim Offer Hub</h1>
+                <p style="opacity: 0.95; font-size: 14px; margin-bottom: 10px;">সরকারি অনুমোদিত • ১০০% নির্ভরযোগ্য • সর্বনিম্ন মূল্য</p>
+                <div class="badge" style="display: inline-block; background: linear-gradient(135deg, #FFD700 0%, #FFC400 100%); color: #0d47a1; padding: 6px 20px; border-radius: 25px; font-size: 13px; font-weight: bold; margin-top: 8px; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);">
+                    🔓 অ্যাডভান্স পেমেন্ট ছাড়াই অফার
+                </div>
+            </div>
+
+            <div class="operator-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 25px 20px;">
+                <div class="operator-card operator-skitto" onclick="loadOperatorPage('skitto')">
+                    <div class="offer-tag" style="position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #8e24aa 0%, #ff4081 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; box-shadow: 0 3px 8px rgba(142, 36, 170, 0.3);">
+                        🔥 হট
+                    </div>
+                    <div class="logo-box" style="width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: 50%; background: rgba(142, 36, 170, 0.08); padding: 15px; border: 2px solid rgba(142, 36, 170, 0.2);">
+                        <i class="fas fa-signal fa-3x" style="color: #8e24aa;"></i>
+                    </div>
+                    <p style="font-size: 17px; font-weight: 800; color: #1a237e; margin-top: 8px;">📶 Skitto Offers</p>
+                </div>
+
+                <div class="operator-card operator-gp" onclick="loadOperatorPage('gp')">
+                    <div class="offer-tag" style="position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #00c853 0%, #009624 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; box-shadow: 0 3px 8px rgba(0, 200, 83, 0.3);">
+                        💥 জনপ্রিয়
+                    </div>
+                    <div class="logo-box" style="width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: 50%; background: rgba(0, 200, 83, 0.08); padding: 15px; border: 2px solid rgba(0, 200, 83, 0.2);">
+                        <i class="fas fa-signal fa-3x" style="color: #00c853;"></i>
+                    </div>
+                    <p style="font-size: 17px; font-weight: 800; color: #1a237e; margin-top: 8px;">📡 GP Offers</p>
+                </div>
+
+                <div class="operator-card operator-banglalink" onclick="loadOperatorPage('banglalink')">
+                    <div class="offer-tag" style="position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #ff6d00 0%, #dd2c00 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; box-shadow: 0 3px 8px rgba(255, 109, 0, 0.3);">
+                        🎁 বিশেষ
+                    </div>
+                    <div class="logo-box" style="width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: 50%; background: rgba(255, 109, 0, 0.08); padding: 15px; border: 2px solid rgba(255, 109, 0, 0.2);">
+                        <i class="fas fa-signal fa-3x" style="color: #ff6d00;"></i>
+                    </div>
+                    <p style="font-size: 17px; font-weight: 800; color: #1a237e; margin-top: 8px;">📞 Banglalink Offers</p>
+                </div>
+
+                <div class="operator-card operator-robi" onclick="loadOperatorPage('robi')">
+                    <div class="offer-tag" style="position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #00bcd4 0%, #ff5252 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; box-shadow: 0 3px 8px rgba(0, 188, 212, 0.3);">
+                        🚀 নতুন
+                    </div>
+                    <div class="logo-box" style="width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: 50%; background: rgba(0, 188, 212, 0.08); padding: 15px; border: 2px solid rgba(0, 188, 212, 0.2);">
+                        <i class="fas fa-signal fa-3x" style="color: #00bcd4;"></i>
+                    </div>
+                    <p style="font-size: 17px; font-weight: 800; color: #1a237e; margin-top: 8px;">📱 Robi Offers</p>
+                </div>
+            </div>
+
+            <div class="section-title" style="background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: white; padding: 20px 25px; font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 15px; margin-top: 10px; border-radius: 15px; margin: 10px 20px 0 20px; box-shadow: 0 8px 20px rgba(13, 71, 161, 0.15);">
+                <i class="fas fa-list-ul"></i> 🛠️ প্রয়োজনীয় সেবাসমূহ
+            </div>
+
+            <div class="service-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 25px 20px;">
+                <a href="javascript:void(0)" onclick="openPage('terms')" class="service-card" style="border-bottom-color: #f39c12;">
+                    <i class="fas fa-file-invoice" style="color: #f39c12; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">📜 শর্তাবলী</p>
+                </a>
+                <a href="javascript:void(0)" onclick="openPage('payment')" class="service-card" style="border-bottom-color: #2ecc71;">
+                    <i class="fas fa-credit-card" style="color: #2ecc71; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">💳 পেমেন্ট</p>
+                </a>
+                <a href="https://wa.me/8801908464263" class="service-card" style="border-bottom-color: #3498db;">
+                    <i class="fas fa-headset" style="color: #3498db; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">📞 হেল্প লাইন</p>
+                </a>
+                <a href="https://t.me/8801908464263" class="service-card" style="border-bottom-color: #9b59b6;">
+                    <i class="fab fa-telegram-plane" style="color: #9b59b6; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">✈️ টেলিগ্রাম</p>
+                </a>
+                
+                <a href="javascript:void(0)" onclick="openRetailerPage()" class="retailer-card">
+                    <i class="fas fa-store" style="color: #FF9800; font-size: 34px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #E65100;">📦 রিটেলার হয়ে কমিশন করুন</p>
+                    <p style="font-size: 11px; color: #FF9800; margin-top: 5px; font-weight: 600;">১০-২০% কমিশন পান!</p>
+                </a>
+                
+                <a href="javascript:void(0)" onclick="openPage('due')" class="service-card" style="border-bottom-color: #e74c3c;">
+                    <i class="fas fa-book-open" style="color: #e74c3c; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">📒 বাকির খাতা</p>
+                </a>
+                <a href="javascript:void(0)" onclick="openPage('faq')" class="service-card" style="border-bottom-color: #1abc9c;">
+                    <i class="fas fa-question-circle" style="color: #1abc9c; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">❓ প্রশ্নোত্তর</p>
+                </a>
+                <a href="javascript:void(0)" onclick="openPage('special')" class="service-card" style="border-bottom-color: #f1c40f;">
+                    <i class="fas fa-gift" style="color: #f1c40f; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 15px; font-weight: 800; color: #333;">🎁 বিশেষ অফার</p>
+                </a>
+            </div>
+        </div>
+
+        <div id="operator-pages" style="display: none;"></div>
+    </div>
+
+    <div class="float-contact">
+        <a href="https://wa.me/8801908464263" class="btn-wa" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script>
+        const operators = {
+            skitto: {
+                name: "স্কিট্টো",
+                color: "#8e24aa",
+                secondary: "#ff4081",
+                offers: [
+                    { id: 1, name: "২.৫ জিবি", data: "2.5GB", minutes: "", validity: "৩ দিন", price: 75, original: 85, category: "data_3", tag: "" },
+                    { id: 2, name: "৩.৫ জিবি", data: "3.5GB", minutes: "", validity: "৩ দিন", price: 83, original: 93, category: "data_3", tag: "হট" },
+                    { id: 3, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৩ দিন", price: 99, original: 109, category: "data_3", tag: "পপুলার" },
+                    { id: 4, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৩ দিন", price: 106, original: 116, category: "data_3", tag: "" },
+                    { id: 5, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৩ দিন", price: 110, original: 120, category: "data_3", tag: "" },
+                    { id: 6, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৩ দিন", price: 115, original: 125, category: "data_3", tag: "" },
+                    { id: 7, name: "৩.৫ জিবি", data: "3.5GB", minutes: "", validity: "৭ দিন", price: 99, original: 109, category: "data_7", tag: "" },
+                    { id: 8, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৭ দিন", price: 121, original: 131, category: "data_7", tag: "হট" },
+                    { id: 9, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৭ দিন", price: 143, original: 153, category: "data_7", tag: "পপুলার" },
+                    { id: 10, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৭ দিন", price: 152, original: 162, category: "data_7", tag: "" },
+                    { id: 11, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৭ দিন", price: 165, original: 175, category: "data_7", tag: "" },
+                    { id: 12, name: "২৫ জিবি", data: "25GB", minutes: "", validity: "৭ দিন", price: 189, original: 199, category: "data_7", tag: "" },
+                    { id: 13, name: "৩০ জিবি", data: "30GB", minutes: "", validity: "৭ দিন", price: 199, original: 209, category: "data_7", tag: "" },
+                    { id: 14, name: "৪০ জিবি", data: "40GB", minutes: "", validity: "৭ দিন", price: 210, original: 220, category: "data_7", tag: "" },
+                    { id: 15, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৩০ দিন", price: 270, original: 280, category: "data_30", tag: "" },
+                    { id: 16, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৩০ দিন", price: 288, original: 298, category: "data_30", tag: "হট" },
+                    { id: 17, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৩০ দিন", price: 299, original: 309, category: "data_30", tag: "পপুলার" },
+                    { id: 18, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৩০ দিন", price: 346, original: 356, category: "data_30", tag: "" },
+                    { id: 19, name: "২৫ জিবি", data: "25GB", minutes: "", validity: "৩০ দিন", price: 397, original: 407, category: "data_30", tag: "" },
+                    { id: 20, name: "৩০ জিবি", data: "30GB", minutes: "", validity: "৩০ দিন", price: 435, original: 445, category: "data_30", tag: "" },
+                    { id: 21, name: "৪০ জিবি", data: "40GB", minutes: "", validity: "৩০ দিন", price: 478, original: 488, category: "data_30", tag: "" },
+                    { id: 22, name: "৫০ জিবি", data: "50GB", minutes: "", validity: "৩০ দিন", price: 499, original: 509, category: "data_30", tag: "" },
+                    { id: 23, name: "৭৫ জিবি", data: "75GB", minutes: "", validity: "৩০ দিন", price: 585, original: 595, category: "data_30", tag: "বিশাল" },
+                    { id: 24, name: "১০০ জিবি", data: "100GB", minutes: "", validity: "৩০ দিন", price: 598, original: 608, category: "data_30", tag: "বেস্ট" },
+                    { id: 25, name: "২৫ মিনিট", data: "", minutes: "২৫", validity: "১ দিন", price: 19, original: 24, category: "minute_1", tag: "" },
+                    { id: 26, name: "৫০ মিনিট", data: "", minutes: "৫০", validity: "১ দিন", price: 32, original: 37, category: "minute_1", tag: "হট" },
+                    { id: 27, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "১ দিন", price: 55, original: 60, category: "minute_1", tag: "" },
+                    { id: 28, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "১ দিন", price: 80, original: 85, category: "minute_1", tag: "" },
+                    { id: 29, name: "৫০ মিনিট", data: "", minutes: "৫০", validity: "৩ দিন", price: 39, original: 44, category: "minute_3", tag: "" },
+                    { id: 30, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "৩ দিন", price: 72, original: 77, category: "minute_3", tag: "হট" },
+                    { id: 31, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৩ দিন", price: 87, original: 92, category: "minute_3", tag: "" },
+                    { id: 32, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৩ দিন", price: 108, original: 113, category: "minute_3", tag: "" },
+                    { id: 33, name: "৩০০ মিনিট", data: "", minutes: "৩০০", validity: "৩ দিন", price: 149, original: 154, category: "minute_3", tag: "" },
+                    { id: 34, name: "৫০ মিনিট", data: "", minutes: "৫০", validity: "৭ দিন", price: 55, original: 60, category: "minute_7", tag: "" },
+                    { id: 35, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "৭ দিন", price: 96, original: 101, category: "minute_7", tag: "হট" },
+                    { id: 36, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৭ দিন", price: 106, original: 111, category: "minute_7", tag: "" },
+                    { id: 37, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৭ দিন", price: 119, original: 124, category: "minute_7", tag: "" },
+                    { id: 38, name: "৩০০ মিনিট", data: "", minutes: "৩০০", validity: "৭ দিন", price: 172, original: 177, category: "minute_7", tag: "পপুলার" },
+                    { id: 39, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৭ দিন", price: 199, original: 204, category: "minute_7", tag: "" },
+                    { id: 40, name: "৪০০ মিনিট", data: "", minutes: "৪০০", validity: "৭ দিন", price: 210, original: 215, category: "minute_7", tag: "" },
+                    { id: 41, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "৭ দিন", price: 264, original: 269, category: "minute_7", tag: "" },
+                    { id: 42, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "১৫ দিন", price: 99, original: 104, category: "minute_15", tag: "" },
+                    { id: 43, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "১৫ দিন", price: 108, original: 113, category: "minute_15", tag: "হট" },
+                    { id: 44, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "১৫ দিন", price: 139, original: 144, category: "minute_15", tag: "" },
+                    { id: 45, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "১৫ দিন", price: 215, original: 220, category: "minute_15", tag: "" },
+                    { id: 46, name: "৪০০ মিনিট", data: "", minutes: "৪০০", validity: "১৫ দিন", price: 249, original: 254, category: "minute_15", tag: "" },
+                    { id: 47, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "১৫ দিন", price: 294, original: 299, category: "minute_15", tag: "" },
+                    { id: 48, name: "১০০০ মিনিট", data: "", minutes: "১০০০", validity: "১৫ দিন", price: 549, original: 554, category: "minute_15", tag: "বিশাল" },
+                    { id: 49, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৩০ দিন", price: 129, original: 134, category: "minute_30", tag: "" },
+                    { id: 50, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৩০ দিন", price: 151, original: 156, category: "minute_30", tag: "হট" },
+                    { id: 51, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৩০ দিন", price: 288, original: 293, category: "minute_30", tag: "পপুলার" },
+                    { id: 52, name: "৪০০ মিনিট", data: "", minutes: "৪০০", validity: "৩০ দিন", price: 299, original: 304, category: "minute_30", tag: "" },
+                    { id: 53, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "৩০ দিন", price: 338, original: 343, category: "minute_30", tag: "" },
+                    { id: 54, name: "১০০০ মিনিট", data: "", minutes: "১০০০", validity: "৩০ দিন", price: 528, original: 533, category: "minute_30", tag: "বিশাল" },
+                    { id: 55, name: "৫ জিবি + ১০০ মিনিট", data: "5GB", minutes: "১০০", validity: "৩ দিন", price: 136, original: 146, category: "combo_3", tag: "বেস্ট" },
+                    { id: 56, name: "১০ জিবি + ২০০ মিনিট", data: "10GB", minutes: "২০০", validity: "৩ দিন", price: 199, original: 209, category: "combo_3", tag: "" },
+                    { id: 57, name: "৮ জিবি + ১০০ মিনিট", data: "8GB", minutes: "১০০", validity: "৭ দিন", price: 199, original: 209, category: "combo_7", tag: "" },
+                    { id: 58, name: "১৫ জিবি + ২০০ মিনিট", data: "15GB", minutes: "২০০", validity: "৭ দিন", price: 248, original: 258, category: "combo_7", tag: "হট" },
+                    { id: 59, name: "২৫ জিবি + ৩০০ মিনিট", data: "25GB", minutes: "৩০০", validity: "৭ দিন", price: 295, original: 305, category: "combo_7", tag: "পপুলার" },
+                    { id: 60, name: "৩০ জিবি + ২০০ মিনিট", data: "30GB", minutes: "২০০", validity: "৩০ দিন", price: 597, original: 607, category: "combo_30", tag: "" },
+                    { id: 61, name: "৩০ জিবি + ৩৫০ মিনিট", data: "30GB", minutes: "৩৫০", validity: "৩০ দিন", price: 612, original: 622, category: "combo_30", tag: "" },
+                    { id: 62, name: "৪০ জিবি + ৪০০ মিনিট", data: "40GB", minutes: "৪০০", validity: "৩০ দিন", price: 646, original: 656, category: "combo_30", tag: "হট" },
+                    { id: 63, name: "৫০ জিবি + ৪০০ মিনিট", data: "50GB", minutes: "৪০০", validity: "৩০ দিন", price: 658, original: 668, category: "combo_30", tag: "পপুলার" },
+                    { id: 64, name: "৫০ জিবি + ২০০ মিনিট", data: "50GB", minutes: "২০০", validity: "৩০ দিন", price: 621, original: 631, category: "combo_30", tag: "" },
+                    { id: 65, name: "৭৫ জিবি + ৩০০ মিনিট", data: "75GB", minutes: "৩০০", validity: "৩০ দিন", price: 693, original: 703, category: "combo_30", tag: "" },
+                    { id: 66, name: "৭৫ জিবি + ৪০০ মিনিট", data: "75GB", minutes: "৪০০", validity: "৩০ দিন", price: 729, original: 739, category: "combo_30", tag: "" },
+                    { id: 67, name: "১০০ জিবি + ৫০০ মিনিট", data: "100GB", minutes: "৫০০", validity: "৩০ দিন", price: 854, original: 864, category: "combo_30", tag: "বিশাল" },
+                    { id: 68, name: "১০০ জিবি + ১০০০ মিনিট", data: "100GB", minutes: "১০০০", validity: "৩০ দিন", price: 1099, original: 1109, category: "combo_30", tag: "বেস্ট" }
+                ]
+            },
+            robi: {
+                name: "রবি",
+                color: "#00bcd4",
+                secondary: "#ff5252",
+                offers: [
+                    { id: 1, name: "৭৫ মিনিট", data: "", minutes: "৭৫", validity: "১ দিন", price: 37, original: 41, category: "minute_1", tag: "হট" },
+                    { id: 2, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "১ দিন", price: 79, original: 88, category: "minute_1", tag: "" },
+                    { id: 3, name: "২৫০ মিনিট", data: "", minutes: "২৫০", validity: "১ দিন", price: 125, original: 139, category: "minute_1", tag: "" },
+                    { id: 4, name: "১ জিবি", data: "1GB", minutes: "", validity: "৩ দিন", price: 56, original: 64, category: "data_3", tag: "" },
+                    { id: 5, name: "৩ জিবি", data: "3GB", minutes: "", validity: "৩ দিন", price: 73, original: 83, category: "data_3", tag: "হট" },
+                    { id: 6, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "৩ দিন", price: 53, original: 62, category: "minute_3", tag: "" },
+                    { id: 7, name: "২৫০ মিনিট", data: "", minutes: "২৫০", validity: "৩ দিন", price: 127, original: 149, category: "minute_3", tag: "" },
+                    { id: 8, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৩ দিন", price: 168, original: 198, category: "minute_3", tag: "পপুলার" },
+                    { id: 9, name: "৪ জিবি", data: "4GB", minutes: "", validity: "৭ দিন", price: 102, original: 128, category: "data_7", tag: "" },
+                    { id: 10, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৭ দিন", price: 118, original: 148, category: "data_7", tag: "হট" },
+                    { id: 11, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৭ দিন", price: 128, original: 160, category: "data_7", tag: "" },
+                    { id: 12, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৭ দিন", price: 148, original: 185, category: "data_7", tag: "পপুলার" },
+                    { id: 13, name: "৭৫ মিনিট", data: "", minutes: "৭৫", validity: "৭ দিন", price: 51, original: 62, category: "minute_7", tag: "" },
+                    { id: 14, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৭ দিন", price: 89, original: 108, category: "minute_7", tag: "" },
+                    { id: 15, name: "২৫০ মিনিট", data: "", minutes: "২৫০", validity: "৭ দিন", price: 121, original: 148, category: "minute_7", tag: "হট" },
+                    { id: 16, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৭ দিন", price: 172, original: 210, category: "minute_7", tag: "" },
+                    { id: 17, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "১৫ দিন", price: 114, original: 143, category: "minute_15", tag: "" },
+                    { id: 18, name: "৩০০ মিনিট", data: "", minutes: "৩০০", validity: "১৫ দিন", price: 151, original: 189, category: "minute_15", tag: "হট" },
+                    { id: 19, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "১৫ দিন", price: 230, original: 287, category: "minute_15", tag: "" },
+                    { id: 20, name: "৭৫০ মিনিট", data: "", minutes: "৭৫০", validity: "১৫ দিন", price: 322, original: 403, category: "minute_15", tag: "পপুলার" },
+                    { id: 21, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৩০ দিন", price: 224, original: 298, category: "data_30", tag: "" },
+                    { id: 22, name: "২০ জিবি", data: "20GB", minutes: "", validity: "৩০ দিন", price: 289, original: 385, category: "data_30", tag: "হট" },
+                    { id: 23, name: "৪০ জিবি", data: "40GB", minutes: "", validity: "৩০ দিন", price: 373, original: 497, category: "data_30", tag: "পপুলার" },
+                    { id: 24, name: "৫০ জিবি", data: "50GB", minutes: "", validity: "৩০ দিন", price: 394, original: 525, category: "data_30", tag: "" },
+                    { id: 25, name: "৭৫ জিবি", data: "75GB", minutes: "", validity: "৩০ দিন", price: 449, original: 598, category: "data_30", tag: "বিশাল" },
+                    { id: 26, name: "১০০ জিবি", data: "100GB", minutes: "", validity: "৩০ দিন", price: 518, original: 691, category: "data_30", tag: "বেস্ট" },
+                    { id: 27, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "৩০ দিন", price: 68, original: 91, category: "minute_30", tag: "" },
+                    { id: 28, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৩০ দিন", price: 117, original: 156, category: "minute_30", tag: "হট" },
+                    { id: 29, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৩০ দিন", price: 161, original: 215, category: "minute_30", tag: "পপুলার" },
+                    { id: 30, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "৩০ দিন", price: 220, original: 293, category: "minute_30", tag: "" },
+                    { id: 31, name: "৭৫০ মিনিট", data: "", minutes: "৭৫০", validity: "৩০ দিন", price: 299, original: 398, category: "minute_30", tag: "বিশাল" },
+                    { id: 32, name: "১০০০ মিনিট", data: "", minutes: "১০০০", validity: "৩০ দিন", price: 388, original: 518, category: "minute_30", tag: "বেস্ট" },
+                    { id: 33, name: "৩ জিবি + ১০০ মিনিট", data: "3GB", minutes: "১০০", validity: "৩ দিন", price: 79, original: 99, category: "combo_3", tag: "হট" },
+                    { id: 34, name: "৩ জিবি + ২০০ মিনিট", data: "3GB", minutes: "২০০", validity: "৩ দিন", price: 124, original: 155, category: "combo_3", tag: "" },
+                    { id: 35, name: "৫ জিবি + ২০০ মিনিট", data: "5GB", minutes: "২০০", validity: "৭ দিন", price: 141, original: 188, category: "combo_7", tag: "" },
+                    { id: 36, name: "৫ জিবি + ৩৫০ মিনিট", data: "5GB", minutes: "৩৫০", validity: "৭ দিন", price: 185, original: 247, category: "combo_7", tag: "হট" },
+                    { id: 37, name: "১৫ জিবি + ১৫০ মিনিট", data: "15GB", minutes: "১৫০", validity: "৭ দিন", price: 158, original: 210, category: "combo_7", tag: "" },
+                    { id: 38, name: "২০ জিবি + ৪০০ মিনিট", data: "20GB", minutes: "৪০০", validity: "৭ দিন", price: 260, original: 346, category: "combo_7", tag: "পপুলার" },
+                    { id: 39, name: "১০ জিবি + ৬০০ মিনিট", data: "10GB", minutes: "৬০০", validity: "১৫ দিন", price: 278, original: 397, category: "combo_15", tag: "" },
+                    { id: 40, name: "৩০ জিবি + ১০০ মিনিট", data: "30GB", minutes: "১০০", validity: "১৫ দিন", price: 293, original: 418, category: "combo_15", tag: "" },
+                    { id: 41, name: "৩০ জিবি + ৫০০ মিনিট", data: "30GB", minutes: "৫০০", validity: "১৫ দিন", price: 340, original: 485, category: "combo_15", tag: "হট" },
+                    { id: 42, name: "৫০ জিবি + ২৫০ মিনিট", data: "50GB", minutes: "২৫০", validity: "১৫ দিন", price: 349, original: 499, category: "combo_15", tag: "পপুলার" },
+                    { id: 43, name: "১০ জিবি + ২৫০ মিনিট", data: "10GB", minutes: "২৫০", validity: "৩০ দিন", price: 278, original: 398, category: "combo_30", tag: "" },
+                    { id: 44, name: "২০ জিবি + ১০০০ মিনিট", data: "20GB", minutes: "১০০০", validity: "৩০ দিন", price: 488, original: 698, category: "combo_30", tag: "" },
+                    { id: 45, name: "২৫ জিবি + ৩০০ মিনিট", data: "25GB", minutes: "৩০০", validity: "৩০ দিন", price: 412, original: 588, category: "combo_30", tag: "হট" },
+                    { id: 46, name: "৩০ জিবি + ৭৫০ মিনিট", data: "30GB", minutes: "৭৫০", validity: "৩০ দিন", price: 473, original: 675, category: "combo_30", tag: "" },
+                    { id: 47, name: "৪০ জিবি + ২০০ মিনিট", data: "40GB", minutes: "২০০", validity: "৩০ দিন", price: 410, original: 585, category: "combo_30", tag: "" },
+                    { id: 48, name: "৫০ জিবি + ৩০০ মিনিট", data: "50GB", minutes: "৩০০", validity: "৩০ দিন", price: 419, original: 599, category: "combo_30", tag: "পপুলার" },
+                    { id: 49, name: "৫০ জিবি + ৭৫০ মিনিট", data: "50GB", minutes: "৭৫০", validity: "৩০ দিন", price: 480, original: 685, category: "combo_30", tag: "" },
+                    { id: 50, name: "৭৫ জিবি + ৩০০ মিনিট", data: "75GB", minutes: "৩০০", validity: "৩০ দিন", price: 499, original: 713, category: "combo_30", tag: "বিশাল" },
+                    { id: 51, name: "৭৫ জিবি + ৭৫০ মিনিট", data: "75GB", minutes: "৭৫০", validity: "৩০ দিন", price: 503, original: 718, category: "combo_30", tag: "" },
+                    { id: 52, name: "১০০ জিবি + ৪০০ মিনিট", data: "100GB", minutes: "৪০০", validity: "৩০ দিন", price: 548, original: 783, category: "combo_30", tag: "পপুলার" },
+                    { id: 53, name: "১০০ জিবি + ১০০০ মিনিট", data: "100GB", minutes: "১০০০", validity: "৩০ দিন", price: 617, original: 882, category: "combo_30", tag: "বিশাল" },
+                    { id: 54, name: "২০০ জিবি + ২০০০ মিনিট", data: "200GB", minutes: "২০০০", validity: "৩০ দিন", price: 1049, original: 1499, category: "combo_30", tag: "বেস্ট" }
+                ]
+            },
+            banglalink: {
+                name: "বাংলালিংক",
+                color: "#ff6d00",
+                secondary: "#dd2c00",
+                offers: [
+                    { id: 1, name: "৪ জিবি", data: "4GB", minutes: "", validity: "৩ দিন", price: 89, original: 99, category: "data_3", tag: "হট" },
+                    { id: 2, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৭ দিন", price: 139, original: 158, category: "data_7", tag: "পপুলার" },
+                    { id: 3, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৭ দিন", price: 169, original: 199, category: "data_7", tag: "বিশাল" },
+                    { id: 4, name: "২০ জিবি", data: "20GB", minutes: "", validity: "৭ দিন", price: 180, original: 219, category: "data_7", tag: "" },
+                    { id: 5, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৩০ দিন", price: 263, original: 329, category: "data_30", tag: "হট" },
+                    { id: 6, name: "১৫ জিবি + ২০০ মিনিট", data: "15GB", minutes: "২০০", validity: "৩০ দিন", price: 374, original: 499, category: "combo_30", tag: "বিশাল" },
+                    { id: 7, name: "৩০ জিবি + ৩০০ মিনিট", data: "30GB", minutes: "৩০০", validity: "৩০ দিন", price: 419, original: 599, category: "combo_30", tag: "বেস্ট" }
+                ]
+            },
+            gp: {
+                name: "গ্রামীনফোন",
+                color: "#00c853",
+                secondary: "#009624",
+                offers: [
+                    { id: 1, name: "২.৫ জিবি", data: "2.5GB", minutes: "", validity: "৩ দিন", price: 75, original: 85, category: "data_3", tag: "" },
+                    { id: 2, name: "৩.৫ জিবি", data: "3.5GB", minutes: "", validity: "৩ দিন", price: 83, original: 93, category: "data_3", tag: "হট" },
+                    { id: 3, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৩ দিন", price: 99, original: 109, category: "data_3", tag: "পপুলার" },
+                    { id: 4, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৩ দিন", price: 106, original: 116, category: "data_3", tag: "" },
+                    { id: 5, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৩ দিন", price: 110, original: 120, category: "data_3", tag: "" },
+                    { id: 6, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৩ দিন", price: 115, original: 125, category: "data_3", tag: "" },
+                    { id: 7, name: "৩.৫ জিবি", data: "3.5GB", minutes: "", validity: "৭ দিন", price: 99, original: 109, category: "data_7", tag: "" },
+                    { id: 8, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৭ দিন", price: 121, original: 131, category: "data_7", tag: "হট" },
+                    { id: 9, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৭ দিন", price: 143, original: 153, category: "data_7", tag: "পপুলার" },
+                    { id: 10, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৭ দিন", price: 152, original: 162, category: "data_7", tag: "" },
+                    { id: 11, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৭ দিন", price: 165, original: 175, category: "data_7", tag: "" },
+                    { id: 12, name: "২৫ জিবি", data: "25GB", minutes: "", validity: "৭ দিন", price: 189, original: 199, category: "data_7", tag: "" },
+                    { id: 13, name: "৩০ জিবি", data: "30GB", minutes: "", validity: "৭ দিন", price: 199, original: 209, category: "data_7", tag: "" },
+                    { id: 14, name: "৪০ জিবি", data: "40GB", minutes: "", validity: "৭ দিন", price: 210, original: 220, category: "data_7", tag: "" },
+                    { id: 15, name: "৫ জিবি", data: "5GB", minutes: "", validity: "৩০ দিন", price: 270, original: 280, category: "data_30", tag: "" },
+                    { id: 16, name: "৮ জিবি", data: "8GB", minutes: "", validity: "৩০ দিন", price: 288, original: 298, category: "data_30", tag: "হট" },
+                    { id: 17, name: "১০ জিবি", data: "10GB", minutes: "", validity: "৩০ দিন", price: 299, original: 309, category: "data_30", tag: "পপুলার" },
+                    { id: 18, name: "১৫ জিবি", data: "15GB", minutes: "", validity: "৩০ দিন", price: 346, original: 356, category: "data_30", tag: "" },
+                    { id: 19, name: "২৫ জিবি", data: "25GB", minutes: "", validity: "৩০ দিন", price: 397, original: 407, category: "data_30", tag: "" },
+                    { id: 20, name: "৩০ জিবি", data: "30GB", minutes: "", validity: "৩০ দিন", price: 435, original: 445, category: "data_30", tag: "" },
+                    { id: 21, name: "৪০ জিবি", data: "40GB", minutes: "", validity: "৩০ দিন", price: 478, original: 488, category: "data_30", tag: "" },
+                    { id: 22, name: "৫০ জিবি", data: "50GB", minutes: "", validity: "৩০ দিন", price: 499, original: 509, category: "data_30", tag: "" },
+                    { id: 23, name: "৭৫ জিবি", data: "75GB", minutes: "", validity: "৩০ দিন", price: 585, original: 595, category: "data_30", tag: "বিশাল" },
+                    { id: 24, name: "১০০ জিবি", data: "100GB", minutes: "", validity: "৩০ দিন", price: 598, original: 608, category: "data_30", tag: "বেস্ট" },
+                    { id: 25, name: "২৫ মিনিট", data: "", minutes: "২৫", validity: "১ দিন", price: 19, original: 24, category: "minute_1", tag: "" },
+                    { id: 26, name: "৫০ মিনিট", data: "", minutes: "৫০", validity: "১ দিন", price: 32, original: 37, category: "minute_1", tag: "হট" },
+                    { id: 27, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "১ দিন", price: 55, original: 60, category: "minute_1", tag: "" },
+                    { id: 28, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "১ দিন", price: 80, original: 85, category: "minute_1", tag: "" },
+                    { id: 29, name: "৫০ মিনিট", data: "", minutes: "৫০", validity: "৩ দিন", price: 39, original: 44, category: "minute_3", tag: "" },
+                    { id: 30, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "৩ দিন", price: 72, original: 77, category: "minute_3", tag: "হট" },
+                    { id: 31, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৩ দিন", price: 87, original: 92, category: "minute_3", tag: "" },
+                    { id: 32, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৩ দিন", price: 108, original: 113, category: "minute_3", tag: "" },
+                    { id: 33, name: "৩০০ মিনিট", data: "", minutes: "৩০০", validity: "৩ দিন", price: 149, original: 154, category: "minute_3", tag: "" },
+                    { id: 34, name: "৫০ মিনিট", data: "", minutes: "৫০", validity: "৭ দিন", price: 55, original: 60, category: "minute_7", tag: "" },
+                    { id: 35, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "৭ দিন", price: 96, original: 101, category: "minute_7", tag: "হট" },
+                    { id: 36, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৭ দিন", price: 106, original: 111, category: "minute_7", tag: "" },
+                    { id: 37, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৭ দিন", price: 119, original: 124, category: "minute_7", tag: "" },
+                    { id: 38, name: "৩০০ মিনিট", data: "", minutes: "৩০০", validity: "৭ দিন", price: 172, original: 177, category: "minute_7", tag: "পপুলার" },
+                    { id: 39, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৭ দিন", price: 199, original: 204, category: "minute_7", tag: "" },
+                    { id: 40, name: "৪০০ মিনিট", data: "", minutes: "৪০০", validity: "৭ দিন", price: 210, original: 215, category: "minute_7", tag: "" },
+                    { id: 41, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "৭ দিন", price: 264, original: 269, category: "minute_7", tag: "" },
+                    { id: 42, name: "১০০ মিনিট", data: "", minutes: "১০০", validity: "১৫ দিন", price: 99, original: 104, category: "minute_15", tag: "" },
+                    { id: 43, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "১৫ দিন", price: 108, original: 113, category: "minute_15", tag: "হট" },
+                    { id: 44, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "১৫ দিন", price: 139, original: 144, category: "minute_15", tag: "" },
+                    { id: 45, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "১৫ দিন", price: 215, original: 220, category: "minute_15", tag: "" },
+                    { id: 46, name: "৪০০ মিনিট", data: "", minutes: "৪০০", validity: "১৫ দিন", price: 249, original: 254, category: "minute_15", tag: "" },
+                    { id: 47, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "১৫ দিন", price: 294, original: 299, category: "minute_15", tag: "" },
+                    { id: 48, name: "১০০০ মিনিট", data: "", minutes: "১০০০", validity: "১৫ দিন", price: 549, original: 554, category: "minute_15", tag: "বিশাল" },
+                    { id: 49, name: "১৫০ মিনিট", data: "", minutes: "১৫০", validity: "৩০ দিন", price: 129, original: 134, category: "minute_30", tag: "" },
+                    { id: 50, name: "২০০ মিনিট", data: "", minutes: "২০০", validity: "৩০ দিন", price: 151, original: 156, category: "minute_30", tag: "হট" },
+                    { id: 51, name: "৩৫০ মিনিট", data: "", minutes: "৩৫০", validity: "৩০ দিন", price: 288, original: 293, category: "minute_30", tag: "পপুলার" },
+                    { id: 52, name: "৪০০ মিনিট", data: "", minutes: "৪০০", validity: "৩০ দিন", price: 299, original: 304, category: "minute_30", tag: "" },
+                    { id: 53, name: "৫০০ মিনিট", data: "", minutes: "৫০০", validity: "৩০ দিন", price: 338, original: 343, category: "minute_30", tag: "" },
+                    { id: 54, name: "১০০০ মিনিট", data: "", minutes: "১০০০", validity: "৩০ দিন", price: 528, original: 533, category: "minute_30", tag: "বিশাল" },
+                    { id: 55, name: "৫ জিবি + ১০০ মিনিট", data: "5GB", minutes: "১০০", validity: "৩ দিন", price: 136, original: 146, category: "combo_3", tag: "বেস্ট" },
+                    { id: 56, name: "১০ জিবি + ২০০ মিনিট", data: "10GB", minutes: "২০০", validity: "৩ দিন", price: 199, original: 209, category: "combo_3", tag: "" },
+                    { id: 57, name: "৮ জিবি + ১০০ মিনিট", data: "8GB", minutes: "১০০", validity: "৭ দিন", price: 199, original: 209, category: "combo_7", tag: "" },
+                    { id: 58, name: "১৫ জিবি + ২০০ মিনিট", data: "15GB", minutes: "২০০", validity: "৭ দিন", price: 248, original: 258, category: "combo_7", tag: "হট" },
+                    { id: 59, name: "২৫ জিবি + ৩০০ মিনিট", data: "25GB", minutes: "৩০০", validity: "৭ দিন", price: 295, original: 305, category: "combo_7", tag: "পপুলার" },
+                    { id: 60, name: "৩০ জিবি + ২০০ মিনিট", data: "30GB", minutes: "২০০", validity: "৩০ দিন", price: 597, original: 607, category: "combo_30", tag: "" },
+                    { id: 61, name: "৩০ জিবি + ৩৫০ মিনিট", data: "30GB", minutes: "৩৫০", validity: "৩০ দিন", price: 612, original: 622, category: "combo_30", tag: "" },
+                    { id: 62, name: "৪০ জিবি + ৪০০ মিনিট", data: "40GB", minutes: "৪০০", validity: "৩০ দিন", price: 646, original: 656, category: "combo_30", tag: "হট" },
+                    { id: 63, name: "৫০ জিবি + ৪০০ মিনিট", data: "50GB", minutes: "৪০০", validity: "৩০ দিন", price: 658, original: 668, category: "combo_30", tag: "পপুলার" },
+                    { id: 64, name: "৫০ জিবি + ২০০ মিনিট", data: "50GB", minutes: "২০০", validity: "৩০ দিন", price: 621, original: 631, category: "combo_30", tag: "" },
+                    { id: 65, name: "৭৫ জিবি + ৩০০ মিনিট", data: "75GB", minutes: "৩০০", validity: "৩০ দিন", price: 693, original: 703, category: "combo_30", tag: "" },
+                    { id: 66, name: "৭৫ জিবি + ৪০০ মিনিট", data: "75GB", minutes: "৪০০", validity: "৩০ দিন", price: 729, original: 739, category: "combo_30", tag: "" },
+                    { id: 67, name: "১০০ জিবি + ৫০০ মিনিট", data: "100GB", minutes: "৫০০", validity: "৩০ দিন", price: 854, original: 864, category: "combo_30", tag: "বিশাল" },
+                    { id: 68, name: "১০০ জিবি + ১০০০ মিনিট", data: "100GB", minutes: "১০০০", validity: "৩০ দিন", price: 1099, original: 1109, category: "combo_30", tag: "বেস্ট" }
+                ]
+            }
+        };
+
+        const categories = {
+            'all': 'সব',
+            'data_1': '১ দিন ডেটা',
+            'data_3': '৩ দিন ডেটা',
+            'data_7': '৭ দিন ডেটা',
+            'data_30': '৩০ দিন ডেটা',
+            'minute_1': '১ দিন মিনিট',
+            'minute_3': '৩ দিন মিনিট',
+            'minute_7': '৭ দিন মিনিট',
+            'minute_15': '১৫ দিন মিনিট',
+            'minute_30': '৩০ দিন মিনিট',
+            'combo_3': '৩ দিন কম্বো',
+            'combo_7': '৭ দিন কম্বো',
+            'combo_15': '১৫ দিন কম্বো',
+            'combo_30': '৩০ দিন কম্বো'
+        };
+
+        let currentOperator = null;
+        let currentFilter = 'all';
+        let filteredOffers = [];
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(function() {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    
+                    setTimeout(function() {
+                        document.getElementById('notification-popup').style.display = 'block';
+                        document.getElementById('popup-overlay').style.display = 'block';
+                    }, 300);
+                }, 500);
+            }, 2500);
+        });
+
+        function closeNotification() {
+            document.getElementById('notification-popup').style.display = 'none';
+            document.getElementById('popup-overlay').style.display = 'none';
+        }
+
+        function loadOperatorPage(operator) {
+            currentOperator = operator;
+            const op = operators[operator];
+            
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('operator-pages').style.display = 'block';
+            document.getElementById('operator-pages').innerHTML = `
+                <div class="operator-header text-white pt-7 pb-10 px-5 operator-${operator}" style="--primary-color: ${op.color}; --secondary-color: ${op.secondary};">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="flex justify-between items-center mb-8">
+                            <div class="flex items-center gap-4">
+                                <button onclick="goBackToHome()" class="bg-white/25 p-3 rounded-2xl backdrop-blur-sm hover:bg-white/35 transition-all duration-300">
+                                    <i class="fas fa-arrow-left text-lg"></i>
+                                </button>
+                                <div>
+                                    <h1 class="text-2xl font-bold">${op.name}</h1>
+                                    <p class="text-sm text-white/85">স্পেশাল অফার ২০২৫</p>
+                                </div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="bg-white/25 px-4 py-3 rounded-2xl backdrop-blur-sm inline-block">
+                                    <p class="text-[11px] font-semibold">হালনাগাদ</p>
+                                    <p class="text-base font-bold">এপ্রিল ২০২৫</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-8">
+                            <h2 class="text-3xl font-bold mb-3">মেগা অফার কম খরচে</h2>
+                            <p class="text-white/95 text-base max-w-md mx-auto">সেরা ইন্টারনেট ও কল অফার এখন অল্প খরচেই আপনার ${op.name} সিমে</p>
+                        </div>
+                        
+                        <div class="max-w-md mx-auto">
+                            <div class="relative">
+                                <input type="text" id="searchInput" placeholder="অফার খুঁজুন (উদাঃ ১০ জিবি)..." class="w-full py-4 px-12 rounded-2xl bg-white text-gray-800 shadow-xl focus:outline-none focus:ring-3 focus:ring-opacity-50" style="border: 2px solid ${op.color}50; focus:ring-color: ${op.color};">
+                                <i class="fas fa-search absolute left-5 top-5 text-gray-500 text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <section class="max-w-6xl mx-auto px-5 py-5">
+                    <div class="flex overflow-x-auto gap-3 pb-3" id="category-buttons">
+                        ${Object.entries(categories).map(([key, value]) => `
+                            <button onclick="filterOffers('${key}')" class="category-btn ${key === 'all' ? 'active' : ''}" data-cat="${key}" style="--primary-color: ${op.color}; --secondary-color: ${op.secondary};">
+                                <i class="fas fa-${key.includes('data') ? 'wifi' : key.includes('minute') ? 'phone' : 'gift'}"></i> ${value}
+                            </button>
+                        `).join('')}
+                    </div>
+                </section>
+                
+                <section class="max-w-6xl mx-auto px-5 mb-5">
+                    <div class="bg-white rounded-2xl p-4 shadow-lg border" style="border-color: ${op.color}30; box-shadow: 0 8px 25px rgba(0,0,0,0.08);">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-600">মোট অফার:</p>
+                                <p class="text-xl font-bold" style="color: ${op.color};" id="offerCount">${op.offers.length}টি</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-600">হেল্পলাইন</p>
+                                <div class="flex gap-3 items-center">
+                                    <a href="tel:121" class="text-lg font-bold" style="color: ${op.color};">১২১</a>
+                                    <span class="text-gray-300">|</span>
+                                    <a href="tel:01908464263" class="text-lg font-bold" style="color: ${op.color};">০১৯০৮৪৬৪২৬৩</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="max-w-6xl mx-auto px-5 pb-20">
+                    <div id="offerGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        ${renderOfferCards(op.offers, op.color, op.secondary)}
+                    </div>
+                    
+                    <div id="noResults" class="text-center py-12 hidden">
+                        <div class="bg-white rounded-2xl p-8 max-w-sm mx-auto shadow-xl">
+                            <i class="fas fa-search fa-3x text-gray-300 mb-6"></i>
+                            <h3 class="text-xl font-bold text-gray-700 mb-3">অফার পাওয়া যায়নি</h3>
+                            <p class="text-gray-600 text-sm mb-6">আপনার সার্চের সাথে মিল খুঁজে পাওয়া যায়নি</p>
+                            <button onclick="filterOffers('all')" class="text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105" style="background: linear-gradient(135deg, ${op.color}, ${op.secondary});">
+                                সব অফার দেখুন
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <footer class="bg-gray-900 text-white py-10">
+                    <div class="max-w-6xl mx-auto px-5">
+                        <div class="flex flex-col md:flex-row justify-between items-center">
+                            <div class="mb-6 md:mb-0 text-center md:text-left">
+                                <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
+                                    <div class="p-2 rounded-xl" style="background: ${op.color};">
+                                        <i class="fas fa-signal text-base"></i>
+                                    </div>
+                                    <h3 class="font-bold text-lg">${op.name} অফার</h3>
+                                </div>
+                                <p class="text-gray-400 text-sm max-w-xs">বাংলাদেশের আধুনিক নেটওয়ার্ক</p>
+                            </div>
+                            
+                            <div class="text-center">
+                                <h4 class="font-bold mb-4 text-sm">সাপোর্ট</h4>
+                                <div class="flex gap-4">
+                                    <a href="tel:121" class="text-white p-2.5 rounded-full hover:scale-110 transition-all duration-300 text-base" style="background: ${op.color};">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    <a href="https://wa.me/8801908464263" target="_blank" class="bg-green-600 text-white p-2.5 rounded-full hover:bg-green-700 hover:scale-110 transition-all duration-300 text-base">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    <a href="https://t.me/8801908464263" target="_blank" class="bg-blue-500 text-white p-2.5 rounded-full hover:bg-blue-600 hover:scale-110 transition-all duration-300 text-base">
+                                        <i class="fab fa-telegram"></i>
+                                    </a>
+                                    <a href="mailto:esgysimrerchage63463@gmail.com" class="bg-red-600 text-white p-2.5 rounded-full hover:bg-red-700 hover:scale-110 transition-all duration-300 text-base">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
+                            <p>© ২০২৫ ${op.name} - সকল অধিকার সংরক্ষিত</p>
+                            <p class="mt-2">কোনো এডভান্স পেমেন্টের প্রয়োজন নেই। সরাসরি আপনার সিমে অ্যাক্টিভেট করুন।</p>
+                            <p class="mt-2">যোগাযোগ: <a href="tel:01908464263" style="color: ${op.color};">০১৯০৮৪৬৪২৬৩</a> | <a href="mailto:esgysimrerchage63463@gmail.com" style="color: ${op.color};">esgysimrerchage63463@gmail.com</a></p>
+                        </div>
+                    </div>
+                </footer>
+            `;
+            
+            filteredOffers = op.offers;
+            currentFilter = 'all';
+            
+            document.getElementById('searchInput').addEventListener('input', searchOffer);
+        }
+
+        function renderOfferCards(offers, primaryColor, secondaryColor) {
+            return offers.map(offer => {
+                const icon = offer.category.includes('data') ? 'wifi' : 
+                            offer.category.includes('minute') ? 'phone' : 'gift';
+                const iconColor = offer.category.includes('data') ? primaryColor :
+                                offer.category.includes('minute') ? secondaryColor : '#9b59b6';
+                const iconBg = offer.category.includes('data') ? `${primaryColor}20` :
+                              offer.category.includes('minute') ? `${secondaryColor}20` : '#9b59b620';
+                
+                return `
+                    <div class="offer-card-compact operator-${currentOperator}" style="--primary-color: ${primaryColor}; --secondary-color: ${secondaryColor};">
+                        ${offer.tag ? `<div class="offer-tag" style="background: linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%); color: white; padding: 4px 10px; border-radius: 15px; font-size: 10px; font-weight: bold; position: absolute; top: 10px; right: 10px; box-shadow: 0 3px 8px rgba(0,0,0,0.1);">${offer.tag}</div>` : ''}
+                        <div class="mb-4 text-center">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-xl mb-3 mx-auto" style="background: ${iconBg}; color: ${iconColor}; border: 2px solid ${iconColor}30;">
+                                <i class="fas fa-${icon} fa-lg"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2">${offer.name}</h3>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                ${offer.data ? `<span class="text-[10px] px-2.5 py-1 rounded-full" style="background: ${primaryColor}20; color: ${primaryColor};">${offer.data}</span>` : ''}
+                                ${offer.minutes ? `<span class="text-[10px] px-2.5 py-1 rounded-full" style="background: ${secondaryColor}20; color: ${secondaryColor};">${offer.minutes} মি.</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="mb-4 text-xs">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-500">মূল্য:</span>
+                                <span class="text-red-500 line-through">৳${offer.original}</span>
+                            </div>
+                            <div class="flex justify-between font-bold">
+                                <span class="text-gray-500">অফার:</span>
+                                <span style="color: ${primaryColor}; font-size: 16px;">৳${offer.price}</span>
+                            </div>
+                        </div>
+                        <div class="text-center mb-3">
+                            <span class="text-[10px] text-gray-600 bg-gray-100 px-3 py-1 rounded-full">${offer.validity}</span>
+                        </div>
+                        <button onclick="buyOffer('${currentOperator}', ${offer.id})" class="buy-now-btn">
+                            <i class="fas fa-shopping-cart"></i> অর্ডার করুন
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterOffers(category) {
+            currentFilter = category;
+            const op = operators[currentOperator];
+            
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-cat="${category}"]`).classList.add('active');
+            
+            let filtered;
+            if (category === 'all') {
+                filtered = op.offers;
+            } else {
+                filtered = op.offers.filter(o => o.category === category);
+            }
+            
+            filteredOffers = filtered;
+            renderFilteredOffers();
+        }
+
+        function renderFilteredOffers() {
+            const grid = document.getElementById('offerGrid');
+            const noResults = document.getElementById('noResults');
+            const op = operators[currentOperator];
+            
+            document.getElementById('offerCount').textContent = `${filteredOffers.length}টি`;
+            
+            if (filteredOffers.length === 0) {
+                noResults.classList.remove('hidden');
+                grid.innerHTML = '';
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+            
+            grid.innerHTML = renderOfferCards(filteredOffers, op.color, op.secondary);
+        }
+
+        function searchOffer() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const op = operators[currentOperator];
+            
+            const results = op.offers.filter(offer => 
+                offer.name.toLowerCase().includes(query) || 
+                (offer.data && offer.data.toLowerCase().includes(query)) ||
+                offer.price.toString().includes(query) ||
+                offer.validity.includes(query)
+            );
+            
+            filteredOffers = results;
+            renderFilteredOffers();
+        }
+
+        function goBackToHome() {
+            document.getElementById('home-page').style.display = 'block';
+            document.getElementById('operator-pages').style.display = 'none';
+            document.getElementById('operator-pages').innerHTML = '';
+            currentOperator = null;
+        }
+
+        function buyOffer(operator, offerId) {
+            const op = operators[operator];
+            const offer = op.offers.find(o => o.id === offerId);
+            
+            const alertBox = document.createElement('div');
+            alertBox.className = 'fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 animate__animated animate__fadeIn';
+            alertBox.innerHTML = `
+                <div class="bg-white rounded-2xl max-w-sm w-full p-6 animate__animated animate__zoomIn" style="box-shadow: 0 25px 50px rgba(0,0,0,0.25);">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold" style="color: ${op.color};">অর্ডার নিশ্চিত করুন</h3>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-500 text-2xl hover:text-gray-700 transition-colors">&times;</button>
+                    </div>
+                    <div class="p-4 rounded-xl mb-6" style="background: ${op.color}15; color: ${op.color}; border-left: 4px solid ${op.color};">
+                        <h4 class="font-bold text-base mb-1">${offer.name} - ৳${offer.price}</h4>
+                        <p class="text-sm">${offer.validity} মেয়াদ</p>
+                        ${offer.data ? `<p class="text-sm mt-2"><i class="fas fa-wifi mr-2"></i>ডেটা: ${offer.data}</p>` : ''}
+                        ${offer.minutes ? `<p class="text-sm mt-1"><i class="fas fa-phone mr-2"></i>কল: ${offer.minutes} মিনিট</p>` : ''}
+                    </div>
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-700 mb-3 font-medium">আপনার মোবাইল নাম্বারটি লিখুন:</p>
+                        <input type="tel" id="userPhone" maxlength="11" placeholder="০১৯XXXXXXXX" 
+                            class="w-full p-4 border-2 rounded-xl text-center text-lg font-bold focus:outline-none transition-all duration-300" style="border-color: ${op.color}50; focus:border-color: ${op.color};">
+                        <p class="text-[11px] text-gray-400 mt-2 text-center">১১ ডিজিটের মোবাইল নম্বর দিন</p>
+                    </div>
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-700 mb-3 font-medium">কীভাবে কিনতে চান?</p>
+                        <div class="flex gap-3">
+                            <button onclick="sendOrder('whatsapp', '${operator}', ${offerId})" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all duration-300 hover:scale-[1.02]">
+                                <i class="fab fa-whatsapp text-lg"></i> WhatsApp
+                            </button>
+                            <button onclick="sendOrder('telegram', '${operator}', ${offerId})" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all duration-300 hover:scale-[1.02]">
+                                <i class="fab fa-telegram text-lg"></i> Telegram
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 flex-1 py-3 rounded-xl font-bold transition-all duration-300">বাতিল</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(alertBox);
+        }
+
+        function sendOrder(platform, operator, offerId) {
+            const phone = document.getElementById('userPhone').value;
+            const op = operators[operator];
+            const offer = op.offers.find(o => o.id === offerId);
+            
+            if(phone.length !== 11) {
+                alert("দুঃখিত, সঠিক ১১ ডিজিটের মোবাইল নম্বরটি লিখুন।");
+                return;
+            }
+            
+            const message = `${op.name} অফার অর্ডার:
+নাম্বার: ${phone}
+অফার: ${offer.name}
+মূল্য: ৳${offer.price}
+মেয়াদ: ${offer.validity}
+${offer.data ? `ডেটা: ${offer.data}` : ''}
+${offer.minutes ? `কল: ${offer.minutes} মিনিট` : ''}
+তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            
+            if(platform === 'whatsapp') {
+                window.open(`https://wa.me/8801908464263?text=${encodedMessage}`, '_blank');
+            } else if(platform === 'telegram') {
+                window.open(`https://t.me/8801908464263?text=${encodedMessage}`, '_blank');
+            }
+            
+            alert("ধন্যবাদ! আপনার অর্ডারটি পাঠানো হয়েছে। শীঘ্রই আমরা আপনার সাথে যোগাযোগ করব।");
+            
+            const modal = document.querySelector('.fixed.inset-0.bg-black\\/70');
+            if (modal) modal.remove();
+        }
+
+        function openRetailerPage() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 animate__animated animate__fadeIn';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl max-w-md w-full max-h-[85vh] overflow-hidden animate__animated animate__zoomIn" style="box-shadow: 0 30px 60px rgba(0,0,0,0.3);">
+                    <div class="sticky top-0 bg-gradient-to-r from-[#FF9800] to-[#F57C00] text-white p-6 flex justify-between items-center">
+                        <h3 class="text-xl font-bold flex items-center gap-3"><i class="fas fa-crown"></i> 🏪 রিটেলার পার্টনারশিপ প্রোগ্রাম</h3>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-white text-2xl hover:bg-white/25 p-1 rounded-full w-9 h-9 flex items-center justify-center transition-all duration-300">&times;</button>
+                    </div>
+
+                    <div class="overflow-y-auto max-h-[65vh] p-6" style="background: #f8fafc;">
+                        <div class="text-center mb-6">
+                            <div class="inline-block p-4 rounded-2xl mb-4" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border: 2px solid #FF9800;">
+                                <i class="fas fa-handshake fa-3x" style="color: #FF9800;"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold mb-3" style="color: #0d47a1;">আপনিও হোন আমাদের অফিসিয়াল রিটেলার!</h2>
+                            <p class="text-gray-700">স্থিতিশীল আয়ের উৎস তৈরি করুন আমাদের সাথে</p>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-5 mb-6 border border-blue-100">
+                            <h4 class="text-lg font-bold mb-4 flex items-center gap-3" style="color: #1976d2;">
+                                <i class="fas fa-chart-line"></i> 💰 আপনার আয়ের সম্ভাবনা
+                            </h4>
+                            <div class="bg-white rounded-xl p-4 mb-4">
+                                <p class="font-bold text-center text-lg mb-2" style="color: #F57C00;">প্রতিদিন ৫০০ - ১,০০০+ টাকা আয় করুন!</p>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start gap-3">
+                                        <div class="bg-green-100 p-1.5 rounded-full mt-0.5">
+                                            <i class="fas fa-check text-green-600 text-sm"></i>
+                                        </div>
+                                        <span>আমাদের <strong class="text-blue-600">সরকার অনুমোদিত ও অতি-সাশ্রয়ী</strong> অফারগুলো থেকে ক্লায়েন্টদের সুবিধা দিন</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <div class="bg-green-100 p-1.5 rounded-full mt-0.5">
+                                            <i class="fas fa-check text-green-600 text-sm"></i>
+                                        </div>
+                                        <span>বাড়ি থেকে বা আপনার দোকান থেকে কাজ করার সম্পূর্ণ স্বাধীনতা</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <div class="bg-green-100 p-1.5 rounded-full mt-0.5">
+                                            <i class="fas fa-check text-green-600 text-sm"></i>
+                                        </div>
+                                        <span><strong class="text-blue-600">বিশেষ ক্রেডিট সুবিধা</strong> (৫০,০০০ টাকা পর্যন্ত)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="text-center mb-8">
+                            <div class="inline-block mb-4">
+                                <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg">
+                                    <i class="fas fa-percentage mr-2"></i>আপনার কমিশন: <span class="text-2xl">১০% - ২০%</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">(অফারের ধরন ও পরিমাণের উপর ভিত্তি করে)</p>
+                            </div>
+                            <p class="text-gray-700 mb-4"><strong>"রেফার" বা "পুনঃবিক্রয়"</strong> এর মাধ্যমে! যখনই আপনি কাউকে আমাদের অফারগুলোতে রেফার করবেন এবং তারা কেনাকাটা করবে, আপনি স্বয়ংক্রিয়ভাবে কমিশন পাবেন।</p>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-5 mb-6 border border-gray-200 shadow-sm">
+                            <h4 class="text-lg font-bold mb-4 flex items-center gap-3" style="color: #0d47a1;">
+                                <i class="fas fa-cogs"></i> 🔧 কিভাবে কাজ করবে?
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="text-center p-4 rounded-xl" style="background: #f3e5f5;">
+                                    <div class="text-2xl mb-2">1</div>
+                                    <p class="font-bold text-sm">আমাদের থেকে কম মূল্যে অফার নিন</p>
+                                </div>
+                                <div class="text-center p-4 rounded-xl" style="background: #e8f5e9;">
+                                    <div class="text-2xl mb-2">2</div>
+                                    <p class="font-bold text-sm">গ্রাহকদের কাছে উপযুক্ত মূল্যে বিক্রি করুন</p>
+                                </div>
+                                <div class="text-center p-4 rounded-xl" style="background: #e3f2fd;">
+                                    <div class="text-2xl mb-2">3</div>
+                                    <p class="font-bold text-sm">প্রতিটি বিক্রয় থেকে কমিশন পান</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h4 class="text-lg font-bold mb-4 flex items-center gap-3" style="color: #0d47a1;">
+                                <i class="fas fa-clipboard-check"></i> 📋 যোগদানের শর্তাবলী
+                            </h4>
+                            <div class="bg-gray-50 rounded-xl p-5">
+                                <ul class="space-y-3">
+                                    <li class="flex items-center gap-3">
+                                        <i class="fas fa-id-card text-blue-600"></i>
+                                        <span>একটি বৈধ মোবাইল নম্বর ও NID/পাসপোর্ট</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <i class="fas fa-wallet text-green-600"></i>
+                                        <span>সক্রিয় বিকাশ/নগদ/রকেট অ্যাকাউন্ট</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <i class="fas fa-chart-bar text-purple-600"></i>
+                                        <span>প্রতি মাসে ন্যূনতম ৫,০০০ টাকার অফার বিক্রির সক্ষমতা</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <i class="fas fa-graduation-cap text-amber-600"></i>
+                                        <span>অফার সম্পর্কে মৌলিক জ্ঞান</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
+                            <h4 class="text-xl font-bold mb-4 text-center" style="color: #F57C00;">🚀 এখনই যোগ দিন!</h4>
+                            <p class="text-center mb-6">নিচের বাটনে ক্লিক করে সরাসরি আমাদের সাথে যোগাযোগ করুন এবং "রিটেলার পার্টনারশিপ প্রোগ্রাম" সম্পর্কে বিস্তারিত জানুন।</p>
+                            <div class="flex flex-col gap-4">
+                                <a href="https://wa.me/8801908464263?text=আমি%20রিটেলার%20পার্টনারশিপ%20প্রোগ্রাম%20সম্পর্কে%20বিস্তারিত%20জানতে%20চাই" target="_blank" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-all duration-300 hover:scale-[1.02] shadow-lg">
+                                    <i class="fab fa-whatsapp text-xl"></i> হোয়াটসঅ্যাপে যোগাযোগ
+                                </a>
+                                <a href="https://t.me/8801908464263" target="_blank" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-all duration-300 hover:scale-[1.02] shadow-lg">
+                                    <i class="fab fa-telegram-plane text-xl"></i> টেলিগ্রামে যোগাযোগ
+                                </a>
+                            </div>
+                            <p class="text-center text-sm text-gray-600 mt-4">যোগাযোগের সময় "<strong class="text-amber-700">রিটেলার পার্টনারশিপ</strong>" লিখে মেসেজ শুরু করুন দ্রুত সহায়তা পেতে।</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 border-t bg-gray-50">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 rounded-xl font-bold transition-all duration-300">
+                            বন্ধ করুন
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function openPage(pageName) {
+            const loader = document.createElement('div');
+            loader.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50';
+            loader.innerHTML = '<div class="bg-white p-6 rounded-xl">লোড হচ্ছে...</div>';
+            document.body.appendChild(loader);
+            
+            setTimeout(() => {
+                loader.remove();
+                
+                let content = '';
+                let title = '';
+                
+                switch(pageName) {
+                    case 'terms':
+                        title = '📋 শর্তাবলী ও নীতিমালা';
+                        content = `
+                            <div style="padding: 20px; max-width: 500px; margin: 0 auto;">
+                                <h2 style="color: #1e3c72; margin-bottom: 20px; text-align: center;">📜 আমাদের শর্তাবলী</h2>
+                                
+                                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                    <h3 style="color: #e74c3c;">⚠️ অ্যাডভান্স পেমেন্ট ভয়?</h3>
+                                    <p>চিন্তা করবেন না! আমরা কোন অ্যাডভান্স পেমেন্ট গ্রহণ করি না।</p>
+                                </div>
+                                
+                                <div style="background: #e8f4fc; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                    <h3 style="color: #3498db;">📄 প্রয়োজনীয় ডকুমেন্টস</h3>
+                                    <ul>
+                                        <li>🆔 NID কার্ড/পাসপোর্ট/স্টুডেন্ট কার্ড/জন্ম নিবন্ধন (যেকোনো একটি)</li>
+                                        <li>📸 একটি স্পষ্ট সেলফি ছবি</li>
+                                        <li>📱 সিম রেজিস্ট্রেশন নম্বর (যদি থাকে)</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="background: #fff8e1; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                    <h3 style="color: #f39c12;">⚖️ আইনি শর্তাবলী</h3>
+                                    <ul>
+                                        <li>✅ অফার নেওয়ার পর ২৪ ঘন্টার মধ্যে পেমেন্ট করুন</li>
+                                        <li>❌ পেমেন্ট না দিলে আইনি ব্যবস্থা নেওয়া হবে</li>
+                                        <li>🔒 আপনার তথ্য গোপন রাখা হবে</li>
+                                        <li>💰 ৫০০ টাকার কম বকেয়া থাকলেও মামলা করা হবে</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="background: #e8f6ef; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                    <h3 style="color: #27ae60;">🤝 রিটেলার সুবিধা</h3>
+                                    <ul>
+                                        <li>🏪 দোকানের ট্রেড লাইসেন্স থাকতে হবে</li>
+                                        <li>📋 ৫০,০০০ টাকা পর্যন্ত ক্রেডিট সুবিধা</li>
+                                        <li>🎯 বিশেষ ডিসকাউন্ট রেট</li>
+                                        <li>📞 সরাসরি সাপোর্ট</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'payment':
+                        title = '💳 পেমেন্ট সিস্টেম';
+                        content = `
+                            <div style="padding: 20px; max-width: 500px; margin: 0 auto;">
+                                <h2 style="color: #1e3c72; margin-bottom: 20px; text-align: center;">💰 পেমেন্ট করার নিয়ম</h2>
+                                
+                                <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
+                                    <h3 style="color: #27ae60;">📱 পেমেন্ট অপশনসমূহ</h3>
+                                    
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                            <div style="color: #a52a2a; font-size: 24px; margin-bottom: 10px;">বিকাশ</div>
+                                            <div style="font-weight: bold; color: #333;">০১৭XXXXXXXX</div>
+                                            <div style="font-size: 12px; color: #666; margin-top: 5px;">(প্রাপ্তির পর আপডেট করুন)</div>
+                                        </div>
+                                        
+                                        <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                            <div style="color: #8B4513; font-size: 24px; margin-bottom: 10px;">নগদ</div>
+                                            <div style="font-weight: bold; color: #333;">০১৮XXXXXXXX</div>
+                                            <div style="font-size: 12px; color: #666; margin-top: 5px;">(প্রাপ্তির পর আপডেট করুন)</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-top: 15px;">
+                                        <div style="color: #0088cc; font-size: 24px; margin-bottom: 10px;">রকেট</div>
+                                        <div style="font-weight: bold; color: #333;">০১৯XXXXXXXX</div>
+                                        <div style="font-size: 12px; color: #666; margin-top: 5px;">(প্রাপ্তির পর আপডেট করুন)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'due':
+                        title = '📒 বাকির খাতা';
+                        content = `
+                            <div style="padding: 20px; max-width: 500px; margin: 0 auto; text-align: center;">
+                                <h2 style="color: #1e3c72; margin-bottom: 20px;">💰 বাকির খাতা</h2>
+                                
+                                <div style="font-size: 80px; color: #ddd; margin: 30px 0;">📊</div>
+                                
+                                <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                                    <h3 style="color: #e74c3c;">👤 সাধারণ গ্রাহক</h3>
+                                    <p>আপনার কোন বকেয়া নেই! কারণ সাধারণ গ্রাহকদের জন্য আমরা কোন ক্রেডিট সুবিধা দেই না।</p>
+                                    <p>সকল অফার ক্যাশ অন ডেলিভারি ভিত্তিক।</p>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'faq':
+                        title = '❓ প্রশ্নোত্তর';
+                        content = `
+                            <div style="padding: 20px; max-width: 500px; margin: 0 auto;">
+                                <h2 style="color: #1e3c72; margin-bottom: 20px; text-align: center;">🤔 সাধারণ প্রশ্নোত্তর</h2>
+                                
+                                <div id="faq-container" style="margin-bottom: 20px;">
+                                    <div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                        <div style="font-weight: bold; color: #1e3c72; margin-bottom: 5px;">
+                                            Q1: অ্যাডভান্স পেমেন্ট দিতে হবে?
+                                        </div>
+                                        <div style="color: #666; border-left: 3px solid #2ecc71; padding-left: 10px;">
+                                            না, আমাদের থেকে কোন অ্যাডভান্স পেমেন্ট দিতে হয় না।
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                        <div style="font-weight: bold; color: #1e3c72; margin-bottom: 5px;">
+                                            Q2: ডেলিভারি সময় কত?
+                                        </div>
+                                        <div style="color: #666; border-left: 3px solid #2ecc71; padding-left: 10px;">
+                                            অর্ডার কনফার্ম হওয়ার পর ২-৪ ঘন্টার মধ্যে অ্যাক্টিভ হয়ে যায়।
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                        <div style="font-weight: bold; color: #1e3c72; margin-bottom: 5px;">
+                                            Q3: ডকুমেন্টস প্রয়োজন?
+                                        </div>
+                                        <div style="color: #666; border-left: 3px solid #2ecc71; padding-left: 10px;">
+                                            হ্যাঁ, NID/পাসপোর্ট/স্টুডেন্ট আইডি এবং একটি সেলফি প্রয়োজন।
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'special':
+                        title = '🎁 বিশেষ অফার';
+                        content = `
+                            <div style="padding: 20px; max-width: 500px; margin: 0 auto; text-align: center;">
+                                <h2 style="color: #1e3c72; margin-bottom: 20px;">🔥 এক্সক্লুসিভ অফার</h2>
+                                
+                                <div style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); padding: 25px; border-radius: 20px; margin-bottom: 20px; color: white;">
+                                    <h3 style="font-size: 24px; margin-bottom: 10px;">🏆 VIP অফার</h3>
+                                    <p style="font-size: 18px; margin-bottom: 15px;">নিম্নলিখিত শর্ত পূরণ করলে বিশেষ অফার পাবেন:</p>
+                                    
+                                    <div style="background: rgba(255,255,255,0.9); color: #333; padding: 15px; border-radius: 10px; text-align: left;">
+                                        <p>✅ আমাদের থেকে ন্যূনতম ৫০০ টাকার অফার কিনুন</p>
+                                        <p>✅ ৩টি রেফারেল দিন যারা আমাদের থেকে অফার কিনবে</p>
+                                        <p>✅ Google রিভিউ দিন ৫ স্টার রেটিং সহ</p>
+                                        <p>✅ আমাদের Facebook পেজে ফলো করুন</p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 20px; font-size: 20px; font-weight: bold;">
+                                        🎁 বোনাস: ২০% এক্সট্রা ডেটা/মিনিট
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden">
+                        <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex justify-between items-center">
+                            <h3 class="text-lg font-bold">${title}</h3>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-white text-2xl">&times;</button>
+                        </div>
+                        <div class="overflow-y-auto max-h-[60vh]">
+                            ${content}
+                        </div>
+                        <div class="p-4 border-t">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold">
+                                বন্ধ করুন
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }, 1000);
+        }
+
+        document.getElementById('popup-overlay').addEventListener('click', closeNotification);
+    </script>
+</body>
+</html>
